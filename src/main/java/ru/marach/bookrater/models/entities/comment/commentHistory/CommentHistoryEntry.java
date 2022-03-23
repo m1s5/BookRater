@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Table(name = "COMMENT_HISTORY")
 public class CommentHistoryEntry {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
