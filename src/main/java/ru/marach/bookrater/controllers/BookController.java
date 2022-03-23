@@ -12,6 +12,7 @@ import ru.marach.bookrater.models.services.CommentService;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController()
 @RequestMapping("/books")
@@ -26,20 +27,33 @@ public class BookController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<BookReadDto> getAll() {
-        return bookService.getAll().stream().map(Book::toReadDto).collect(Collectors.toList());
+    public List<BookReadDto> getAll(@RequestParam(required = false) boolean expand) {
+        Stream<Book> bookStream = bookService.getAll().stream();
+        return expand
+                ? bookStream
+                .map(Book::toExpandedReadDto)
+                .collect(Collectors.toList())
+                : bookStream
+                .map(Book::toReadDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public BookReadDto getById(@PathVariable Long id) {
-        return bookService.getById(id).toReadDto();
+    public BookReadDto getById(@PathVariable Long id, @RequestParam(required = false) boolean expand) {
+        final Book book = bookService.getById(id);
+        return expand
+                ? book.toExpandedReadDto()
+                : book.toReadDto();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BookReadDto createBook(@RequestBody Book newBook) {
-        return bookService.addNew(newBook).toReadDto();
+    public BookReadDto createBook(@RequestBody Book newBook, @RequestParam(required = false) boolean expand) {
+        Book book = bookService.addNew(newBook);
+        return expand
+                ? book.toExpandedReadDto()
+                : book.toReadDto();
     }
 
     @PostMapping("/{id}")
