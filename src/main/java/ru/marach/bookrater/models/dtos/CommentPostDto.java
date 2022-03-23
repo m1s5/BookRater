@@ -1,13 +1,12 @@
 package ru.marach.bookrater.models.dtos;
 
 import lombok.Data;
-import ru.marach.bookrater.models.entities.book.Book;
-import ru.marach.bookrater.models.entities.comment.Comment;
-import ru.marach.bookrater.models.entities.comment.commentHistory.CommentHistoryEntry;
+import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
 
 @Data
+@Accessors(chain = true)
 public class CommentPostDto {
     @NotNull
     private String text;
