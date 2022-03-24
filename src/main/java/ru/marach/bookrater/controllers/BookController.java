@@ -11,6 +11,7 @@ import ru.marach.bookrater.models.services.BookService;
 import ru.marach.bookrater.models.services.CommentService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -27,8 +28,13 @@ public class BookController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<BookReadDto> getAll(@RequestParam(required = false) boolean expand) {
-        Stream<Book> bookStream = bookService.getAll().stream();
+    public List<BookReadDto> getAll(
+            @RequestParam(required = false) boolean expand,
+            @RequestParam(required = false) Optional<String> search) {
+        Stream<Book> bookStream = search.isPresent()
+                ? bookService.getAll(search.get()).stream()
+                : bookService.getAll().stream();
+
         return expand
                 ? bookStream
                 .map(Book::toExpandedReadDto)

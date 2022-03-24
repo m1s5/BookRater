@@ -19,6 +19,13 @@ public class BookService {
         return bookRepository.findAll();
     }
 
+    public List<Book> getAll(String search) {
+        final String searchString = "%" + search + "%";
+        return bookRepository
+                .findAllByTitleLikeIgnoreCaseOrDescriptionLikeIgnoreCaseOrIsbnCodeLikeIgnoreCaseOrAuthorLikeIgnoreCase
+                        (searchString, searchString, searchString, searchString);
+    }
+
     public Book getById(Long id) {
         return bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
     }
